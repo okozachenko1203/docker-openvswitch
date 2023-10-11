@@ -1,3 +1,0 @@
-[submodule "antrea"]
-	path = antrea
-	url = https://github.com/mnaser/antrea.git
