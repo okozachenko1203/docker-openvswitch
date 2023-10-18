@@ -1,7 +1,7 @@
 FROM quay.io/centos/centos:stream9
 ARG OVS_SERIES
 ARG OVS_VERSION
-RUN --mount=type=cache,target=/var/cache/dnf \
+RUN \
   dnf -y install centos-release-nfv-openvswitch.noarch && \
   dnf -y install openvswitch${OVS_SERIES}-${OVS_VERSION}.el9s iptables \
     --installroot /build \
