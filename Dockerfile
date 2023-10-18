@@ -3,7 +3,7 @@ ARG OVS_SERIES
 ARG OVS_VERSION
 RUN --mount=type=cache,target=/var/cache/dnf \
   dnf -y install centos-release-nfv-openvswitch.noarch && \
-  dnf -y install openvswitch${OVS_SERIES}-${OVS_VERSION}.el9s \
+  dnf -y install openvswitch${OVS_SERIES}-${OVS_VERSION}.el9s iptables \
     --installroot /build \
     --releasever 9-stream \
     --setopt=install_weak_deps=False \

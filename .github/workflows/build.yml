@@ -13,6 +13,9 @@ on:
 jobs:
   image:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
     - name: Install QEMU static binaries
       uses: docker/setup-qemu-action@v3
@@ -32,6 +35,7 @@ jobs:
         password: ${{ secrets.QUAY_ROBOT_TOKEN }}
 
     - name: Build image
+      id: push-step
       uses: docker/build-push-action@v5
       with:
         push: ${{ github.event_name == 'push' }}
@@ -43,7 +47,11 @@ jobs:
           OVS_SERIES=3.1
           OVS_VERSION=3.1.0-55
         tags: |-
-          quay.io/vexxhost/openvswitch:3.1.0-55
-          quay.io/vexxhost/openvswitch:3.1.0
-          quay.io/vexxhost/openvswitch:3.1
-          quay.io/vexxhost/openvswitch:3
+          quay.io/vexxhost/openvswitch:3.1.0-55atmosphere1
+
+    - name: Install cosign
+      if: ${{ github.event_name == 'push' }}
+      uses: sigstore/cosign-installer@main
+
+    - name: Sign the container image
+      run: cosign sign --yes quay.io/vexxhost/openvswitch@${{ steps.push-step.outputs.digest }}
